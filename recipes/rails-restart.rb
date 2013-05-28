@@ -11,17 +11,14 @@ node[:deploy].each do |application, deploy|
     next
   end
 
-	before_restart do
-		if deploy[:application_type] == 'rails'
-			rails_env = new_resource.environment["RAILS_ENV"]
-			Chef::Log.info("Precompiling assets for RAILS_ENV=#{rails_env}...")
-			
-			execute "rake assets:precompile" do
-				cwd release_path
-				command "bundle exec rake assets:precompile"
-				environment "RAILS_ENV" => rails_env
-			end
-		end
+	#rails_env = new_resource.environment["RAILS_ENV"]
+	rails_env = 'production'
+	Chef::Log.info("Precompiling assets for RAILS_ENV=#{rails_env}...")
+	
+	execute "rake assets:precompile" do
+		cwd release_path
+		command "bundle exec rake assets:precompile"
+		environment "RAILS_ENV" => rails_env
 	end
   
   execute "restart Server" do
